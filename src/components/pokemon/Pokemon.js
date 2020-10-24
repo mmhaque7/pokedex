@@ -1,34 +1,32 @@
-import Axios from 'axios';
-import React, { Component } from 'react'
+import Axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
-export default class Pokemon extends Component {
-    state={
-        name:"",
-        pokemonIndex:"",
-        imgUrl:"",
+export default function Pokemon(props) {
+  const [pokeName, setpokeName] = useState("");
+  //const [pokemonIndex, setpokemonIndex] = useState('');
+  const [imgUrl, setimgUrl] = useState(
+    `https://img.pokemondb.net/sprites/bank/normal/${pokeName}.png`
+  );
+  
+  const params = useParams();
 
-    }
-    async componentDidMount(){
-        const {pokemonIndex} = this.props.match.params;
-
-        const pokeUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonIndex}/`; 
-        
-        
-        const res = await Axios.get(pokeUrl);
-
-        const name = res.data.name;
-        const imgUrl = `https://img.pokemondb.net/sprites/bank/normal/${name}.png`;
-
-        // eslint-disable-next-line no-restricted-globals
-        this.setState({name,pokemonIndex,imgUrl})
-    }
+  useEffect(() => {
+    // setpokemonIndex(params.pokemonIndex);
+    Axios.get(
+      `https://pokeapi.co/api/v2/pokemon/${params.pokemonIndex}/`
+    ).then((res) => {
+        setpokeName(res.data.name);
+        setimgUrl(`https://img.pokemondb.net/sprites/bank/normal/${res.data.name}.png`)
+    });
     
-    render() {
-        return (
-            <div>
-                <h1>{this.state.name}</h1>
-                <img src={this.state.imgUrl} alt={this.state.name}></img>
-            </div>
-        )
-    }
+  }, [params.pokemonIndex, pokeName]);
+  
+
+  return (
+    <div>
+      <h1>{pokeName}</h1>
+      <img src={imgUrl} alt={pokeName}/>
+    </div>
+  );
 }
