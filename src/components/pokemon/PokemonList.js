@@ -4,7 +4,7 @@ import PokemonCard from "./PokemonCard";
 
 export default function PokemonList() {
   const [pokemon, setPokemon] = useState([]);
-  const [currentPage, setCurrentPageUrl] = useState(
+  const [currentPageURL, setCurrentPageUrl] = useState(
     "https://pokeapi.co/api/v2/pokemon"
   );
   const [nexPageURL, setNextPageURL] = useState("");
@@ -14,7 +14,7 @@ export default function PokemonList() {
   useEffect(() => {
     setLoading(true);
     let cancel;
-    Axios.get(currentPage, {
+    Axios.get(currentPageURL, {
       cancelToken: new Axios.CancelToken((c) => (cancel = c)),
     }).then((res) => {
       setLoading(false);
@@ -25,7 +25,7 @@ export default function PokemonList() {
 
     return () => cancel();
     
-  }, [currentPage]);
+  }, [currentPageURL]);
 
   if (Loading) return "Loading Pokemon.....";
 
